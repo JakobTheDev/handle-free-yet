@@ -1,0 +1,267 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Arvo', serif;
+    margin: 0px;
+    height: 100%;
+}
+
+.container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.intro-message {
+    margin: 2em;
+    text-align: center;
+}
+
+.intro-message p {
+    margin: 0.5rem;
+}
+
+.form-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    max-width: 450px;
+    width: 90%;
+}
+
+.feedback-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+
+.footer {
+    padding: 15px;
+    text-align: center;
+}
+
+.footer a {
+    color: #00aced;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #0084b4;
+}
+
+h1 {
+    color: #00aced;
+    font-size: 4rem;
+    font-weight: 100;
+    text-align: center;
+    margin: 1em 1em 0em 1em;
+}
+
+p {
+    color: #777777;
+}
+
+.input-wrapper {
+    border-color: #00aced;
+    border-radius: 36px;
+    border-style: solid;
+    box-sizing: border-box;
+    color: #777777;
+    display: flex;
+    font-size: 2rem;
+    padding: 10px 20px;
+    width: 100%;
+}
+
+.input-wrapper:focus-within {
+    border-color: #0084b4;
+}
+
+input {
+    border: transparent;
+    color: #777777;
+    font-size: 2rem;
+    width: 100%;
+}
+
+input:focus {
+    outline: transparent;
+}
+
+div.error {
+    align-self: start;
+    color: #cc0000;
+    font-size: 1rem;
+    height: 1rem;
+    padding: 5px 0px 10px 20px;
+}
+
+button {
+    background-color: #00aced;
+    border-radius: 36px;
+    border: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1.5rem;
+    height: 66px;
+    min-width: 200px;
+    padding: 15px 40px;
+}
+
+button:hover,
+button:focus {
+    background-color: #0084b4;
+    outline: transparent;
+}
+
+#feedback-emoji {
+    font-size: 3rem;
+    margin: 0.5rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media screen and (max-width: 980px) {
+    p {
+        font-size: 2rem;
+    }
+    input {
+        font-size: 3rem;
+    }
+    button {
+        font-size: 2rem;
+        height: 6rem;
+        width: 15rem;
+    }
+    .form-wrapper {
+        max-width: unset;
+        width: 80%;
+    }
+    .input-wrapper {
+        font-size: 3rem;
+    }
+    div.error {
+        height: 2.5rem;
+        font-size: 2rem;
+    }
+    .feedback-wrapper {
+        font-size: 2rem;
+    }
+    #feedback-emoji {
+        font-size: 5rem;
+        margin: 1rem;
+    }
+}
+
+/*
+ * Loader styles
+ */
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 27px;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 10px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}
+
+/*
+ * Buy me a coffee button styles
+ */
+.bmc-button img {
+    width: 35px !important;
+    margin-bottom: 1px !important;
+    box-shadow: none !important;
+    border: none !important;
+    vertical-align: middle !important;
+}
+.bmc-button {
+    padding: 7px 10px 7px 10px !important;
+    line-height: 35px !important;
+    height: 51px !important;
+    min-width: 217px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    color: #ffffff !important;
+    background-color: #ff813f !important;
+    border-radius: 5px !important;
+    border: 1px solid transparent !important;
+    padding: 7px 10px 7px 10px !important;
+    font-size: 22px !important;
+    letter-spacing: 0.6px !important;
+    box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;
+    -webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;
+    margin: 0 auto !important;
+    font-family: 'Cookie', cursive !important;
+    -webkit-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+    -o-transition: 0.3s all linear !important;
+    -webkit-transition: 0.3s all linear !important;
+    -moz-transition: 0.3s all linear !important;
+    -ms-transition: 0.3s all linear !important;
+    transition: 0.3s all linear !important;
+}
+.bmc-button:hover,
+.bmc-button:active,
+.bmc-button:focus {
+    -webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;
+    text-decoration: none !important;
+    box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;
+    opacity: 0.85 !important;
+    color: #ffffff !important;
+}

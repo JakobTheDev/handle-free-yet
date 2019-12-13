@@ -12,12 +12,16 @@
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
-        <meta name="theme-color" content="#ffffff"
+        <meta name="theme-color" content="#ffffff" />
+
+        <script src="https://www.google.com/recaptcha/api.js?render=6LdEgMcUAAAAAOeGI2F9UPKOzcfMb0EgTwLy0CV0"></script>
     </head>
     <body>
         <div class="container">
+            <!-- Heading -->
             <h1>Is My Twitter Handle Free Yet?</h1>
 
+            <!-- Intro message-->
             <div class="intro-message">
                 <p>Twitter will soon start releasing the handles for inactive accounts.</p>
                 <p>Got a handle that you're waiting to grab?</p>
@@ -38,6 +42,9 @@
                 </div>
                 <div id="email-error" class="error"></div>
 
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+                <input type="hidden" name="action" value="validate_captcha" />
+
                 <!-- Notify me button -->
                 <button type="submit" name="notify" id="notify" tabindex="10" onclick="onClickNotifyMe()">
                     <span id="notify-button-text">Notify Me</span>
@@ -48,7 +55,6 @@
                         <div></div>
                     </div>
                 </button>
-
             </div>
 
             <!-- Feedback Message -->
@@ -57,7 +63,7 @@
                 <p id="feedback-message"></p>
             </div>
 
-            <!-- Buy me a coffee -->
+            <!-- Twitter / Buy me a coffee -->
             <div class="footer">
                 <p>Follow us <a target="_blank" href="https://twitter.com/HandleFreeYet">@HandleFreeYet</a></p>
                 <p>Did you get your handle?</p>

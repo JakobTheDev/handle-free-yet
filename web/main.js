@@ -16,7 +16,8 @@ const feedbackMessage = document.getElementById('feedback-message');
 // Email validation regex
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 // Global variables
-showValidation = false;
+var showValidation = false;
+var recaptchaToken = '';
 
 /**
  * Handler for the 'Notify Me' button
@@ -92,12 +93,12 @@ async function onClickNotifyMe() {
 
     // Cheeky cheeky
     if (submitResponse.success && !submitResponse.isDuplicate && !submitResponse.isJakob) {
-      // Handle is free
-      setFeedbackMessage('😎', 'All sorted! We\'ll let you know when it\'s free');
-      // Stop spinner
-      setSpinner(false);
-      return;
-  }
+        // Handle is free
+        setFeedbackMessage('😎', "All sorted! We'll let you know when it's free");
+        // Stop spinner
+        setSpinner(false);
+        return;
+    }
 
     // Stop spinner regardless
     setSpinner(false);
@@ -137,9 +138,13 @@ async function submitHandle(handle, email) {
         },
         body: JSON.stringify({
             screen_name: handle,
-            email
+            email,
+            recaptchaToken
         })
     };
+
+    // Refetcha recaptcha token (Can only use once)
+    fetchRecaptchaToken()
 
     // Query the API
     return fetch(API_URL + API_ROUTE_SUBMIT, queryParams).then(blob => blob.json());
@@ -214,4 +219,18 @@ function setSpinner(active) {
 function setFeedbackMessage(emoji, message) {
     feedbackEmoji.innerHTML = emoji;
     feedbackMessage.innerHTML = message;
+}
+
+grecaptcha.ready(function() {
+    grecaptcha.execute('6LdEgMcUAAAAAOeGI2F9UPKOzcfMb0EgTwLy0CV0', { action: 'submit' }).then(function(token) {
+        recaptchaToken = token;
+    });
+});
+
+function fetchRecaptchaToken() {
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6LdEgMcUAAAAAOeGI2F9UPKOzcfMb0EgTwLy0CV0', { action: 'submit' }).then(function(token) {
+            recaptchaToken = token;
+        });
+    });
 }

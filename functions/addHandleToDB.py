@@ -1,14 +1,32 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import json
+import requests
+import os
+
+URL_RECAPTCHA = 'https://www.google.com/recaptcha/api/siteverify'
 
 def lambda_handler(event, context):
+    # Verify recaptcha
+    data = {
+      "secret": os.environ['CAPTCHA_KEY'],
+      "response": event['recaptchaToken']
+    }
+    response = requests.post(url = URL_RECAPTCHA, data = data)
+    if not json.loads(response.text)['success']:
+        return {
+            'success': False,
+            'isDuplicate': False,
+            'isJakob': False,
+            'message': 'Error with CAPTCHA'
+        }
+
     # Get the service resource.
     dynamodb = boto3.resource('dynamodb')
     
     # Instantiate a table resource object without actually
     # creating a DynamoDB table.
-    table = dynamodb.Table('twitterHandles')
+    table = dynamodb.Table('handleFreeYet')
     
     # Lowercase inputs for comparisons
     screen_name_lower = event['screen_name'].lower()
@@ -22,9 +40,10 @@ def lambda_handler(event, context):
     
     # if the combination exists, exit
     if len(items) > 0:
+        print('User exists, exiting')
         return {
             'success': True,
-            'isDupslicate': True,
+            'isDuplicate': True,
             'isJakob': False,
             'message': 'You\'re already tracking this handle'
         }

@@ -2,8 +2,9 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 import json
-import requests
 import os
+import requests
+import time
 
 URL_RECAPTCHA = 'https://www.google.com/recaptcha/api/siteverify'
 
@@ -64,10 +65,12 @@ def lambda_handler(event, context):
            Item={
                 'email': email_lower,
                 'screen_name': screen_name_lower,
-                'has_been_notified': False
+                'has_been_notified': False,
+                'last_checked_timestamp': int(time.time())
             }
         )
-    except:
+    except Exception as e:
+        print(e)
         # Handle errors
         return {
             'success': False,

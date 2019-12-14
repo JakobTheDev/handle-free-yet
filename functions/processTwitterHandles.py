@@ -1,8 +1,13 @@
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 import json
 import os
+import time
 import twitter
+
+# Global variables
+TWITTER_API_LIMIT = 900
 
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
@@ -12,34 +17,59 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('handleFreeYet')
 
 def lambda_handler(event, context):
+  # Query the DB for all unprocessed handles
+  response = table.scan(
+      FilterExpression=Key('has_been_notified').eq(False)
+  )
+  items = response['Items']
+  
+  # Sort the handles by last processed, take the first chunk
+  sorted_items = sorted(items, key = lambda i: i['last_checked_timestamp'])
+  del sorted_items[TWITTER_API_LIMIT:]
+  
+  # Update the timestamp
+  mark_as_checked(sorted_items)
+  
   # Authenticate to the twitter API
   api = twitter.Api(consumer_key=os.environ['CONSUMER_KEY'],
                     consumer_secret=os.environ['CONSUMER_SECRET'],
                     access_token_key=os.environ['ACCESS_TOKEN_KEY'],
                     access_token_secret=os.environ['ACCESS_TOKEN_SECRET'])
 
-  for query in event:
+  for query in sorted_items:
     try:
       # Fetch the user by handle
-      print('Querying handle ' + query['screen_name'])
       user = api.GetUser(screen_name=query['screen_name'])
     except Exception as e:
-      #Yuck...
+      # Yuck...
       # TwitterError has no property 'code', so this is my dumb workaround
       errorString = str(e)
       errorJSONString = errorString.replace("'", '"')
       errorObject = json.loads(errorJSONString)
       errorCode = errorObject[0].get('code')
       
-      # User not found error code is 5 - this is our success case!
+      # User not found error code is 50 - this is our success case!
       if(errorCode == 50):
         # Send the email and move on to the next query
+        print('Handle is free: ' + query['screen_name'])
         process_handle(query)
         continue
 
-    # Dang... the handle exists
-    print('Handle is taken 😢')
-    
+def mark_as_checked(items):
+  for item in items:
+    # Update the timestamp
+    response = table.update_item(
+      Key={
+        'screen_name': item['screen_name'],
+        'email': item['email']
+      },
+      UpdateExpression="set last_checked_timestamp = :t",
+      ExpressionAttributeValues={
+        ':t': int(time.time())
+      }
+    )
+
+
 def process_handle(query):
   # Mark as complete in the DB
   mark_as_complete(query)
@@ -55,11 +85,11 @@ def mark_as_complete(query):
       'screen_name': query['screen_name'],
       'email': query['email']
     },
-    UpdateExpression="set has_been_notified = :n",
+    UpdateExpression="set has_been_notified = :n, last_checked_timestamp = :t",
     ExpressionAttributeValues={
-      ':n': True
-    },
-    ReturnValues="UPDATED_NEW"
+      ':n': True,
+      ':t': int(time.time())
+    }
   )
 
 def send_email(query):

@@ -13,8 +13,10 @@ const notifyButtonLoader = document.getElementById('notify-button-loader');
 const feedbackEmoji = document.getElementById('feedback-emoji');
 const feedbackMessage = document.getElementById('feedback-message');
 
-// Email validation regex
+// Validation regex
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const bannedWordsRegex = /twitter|admin/;
+const allowedCharactersRegex = /[^a-zA-Z0-9_]/;
 // Global variables
 var showValidation = false;
 var recaptchaToken = '';
@@ -144,7 +146,7 @@ async function submitHandle(handle, email) {
     };
 
     // Refetcha recaptcha token (Can only use once)
-    fetchRecaptchaToken()
+    fetchRecaptchaToken();
 
     // Query the API
     return fetch(API_URL + API_ROUTE_SUBMIT, queryParams).then(blob => blob.json());
@@ -183,9 +185,21 @@ function isHandleValid() {
         return false;
     }
 
-    // Check handle isn't too long
-    if (handleInput.value.length > 15) {
-        handleError.innerHTML = 'Twitter handles are 15 characters or fewer';
+    // Check handle is a valid length
+    if (handleInput.value.length < 5 || handleInput.value.length > 15) {
+        handleError.innerHTML = 'Twitter handles are 5 to 15 characters long';
+        return false;
+    }
+
+    // Validate no banned words
+    if (bannedWordsRegex.test(String(handleInput.value).toLowerCase())) {
+        handleError.innerHTML = "Twitter handles can't contain 'Twitter' or 'Admin'";
+        return false;
+    }
+
+    // Validate allowed characters
+    if (allowedCharactersRegex.test(String(handleInput.value).toLowerCase())) {
+        handleError.innerHTML = "Handles can contain letters, numbers and underscores";
         return false;
     }
 
@@ -195,7 +209,7 @@ function isHandleValid() {
 }
 
 function isEmailValid() {
-    // Use inbuilt email validator
+    // Validate email with regex
     if (!emailRegex.test(String(emailInput.value).toLowerCase())) {
         emailError.innerHTML = 'Please enter a valid email';
         return false;

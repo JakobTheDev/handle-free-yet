@@ -1,6 +1,6 @@
 # HandleFreeYet
 
-Twitter will soon be releasing handles of accounts that have been inactive for more than 6 months. HandleFreeYet lets you submit a handle and checks daily whether the handle is free yet. When the handle is made available, it sends out an email to let you knwo. Neat! 😄
+Twitter will soon be releasing handles of accounts that have been inactive for more than 6 months. HandleFreeYet lets you submit a handle and checks daily whether the handle is free yet. When the handle is made available, it sends out an email to let you know. Neat! 😄
 
 ## What are you doing with my email?
 
